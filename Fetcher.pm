@@ -1,4 +1,3 @@
-# $Id: Fetcher.pm,v 0.1 2003/23/07 20:30:38 troc Exp troc $
 # Lyrics Fetcher
 #
 # Copyright (C) 2003 Sir Reflog <reflog@mail15.com>
@@ -23,7 +22,7 @@
 package Lyrics::Fetcher;
 use vars qw($VERSION $Error);
 
-$VERSION = '0.3';
+$VERSION = '0.3.1';
 $Error = 'OK'; #return status string
 
 use strict;

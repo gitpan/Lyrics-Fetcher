@@ -4,6 +4,9 @@ Legend:
 [+] added
 [-] fixed
 
+01/9/2003 by reflog
+[*] enchamced make script to support dependencies
+
 27/8/2003 by reflog
 [*] test script is renewed
 [-] updated the modules to represent sites' changes
