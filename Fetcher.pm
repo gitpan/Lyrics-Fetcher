@@ -1,4 +1,4 @@
-# $Id: CDDB.pm,v 0.1 2003/23/07 20:30:38 troc Exp troc $
+# $Id: Fetcher.pm,v 0.1 2003/23/07 20:30:38 troc Exp troc $
 # Lyrics Fetcher
 #
 # Copyright (C) 2003 Sir Reflog <reflog@mail15.com>
@@ -23,7 +23,7 @@
 package Lyrics::Fetcher;
 use vars qw($VERSION);
 
-$VERSION = '0.1';
+$VERSION = '0.2';
 
 use strict;
 use Data::Dumper;
