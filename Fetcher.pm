@@ -21,9 +21,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 package Lyrics::Fetcher;
-use vars qw($VERSION);
+use vars qw($VERSION $Error);
 
-$VERSION = '0.2';
+$VERSION = '0.3';
+$Error = 'OK'; #return status string
 
 use strict;
 use Data::Dumper;
@@ -65,9 +66,9 @@ sub fetch {
    if ($@) { 
 	return undef;
    }
-
+   $Error = 'OK'; # reinit the error
    my($f) = $fetcher->fetch($artist, $title);
-
+   
    return html2text($f);
 
 }
@@ -112,7 +113,10 @@ text form.
 
 This module calls the respective Fetcher->fetch($$) method and returns the result.
 
-In case of error the Fetchers must return undef with the error description in $@.
+In case of module error the Fetchers must return undef with the error description in $@.
+
+In case of problems with lyrics' fetching, the error fill be returned in the $Lyrics::Fetcher::Error string.
+If all goes well, it will have 'OK' in it.
 
 The fetcher selection is made by the "method" parameter passed to the fetch() of this module.
 

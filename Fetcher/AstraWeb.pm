@@ -32,8 +32,19 @@ sub fetch($$$){
     my($stitle) = join ("+", split(/ /, $title));
     $agent->get("http://search.lyrics.astraweb.com/?word=$sartist+$stitle");
     $agent->form(1) if $agent->forms and scalar @{$agent->forms};
-    $agent->follow(qr((?-xism:$title)));
-    $agent->follow(qr((?-xism:Printable)));
+    if(grep { $_->text() =~ /$title/ }@{$agent->links}) {
+	$agent->follow(qr((?-xism:$title)));
+        if(grep { $_->text() =~ /Printable/ }@{$agent->links}) {
+		    $agent->follow(qr((?-xism:Printable)));
+	}else{
+	    $Lyrics::Fetcher::Error = 'Bad page format';
+	    return;
+		
+	}
+    }else{
+    $Lyrics::Fetcher::Error = 'Cannot find such title';
+    return;
+    }
     return $agent->content =~  /<blockquote>(.*)<\/blockquote>/;
 }
 

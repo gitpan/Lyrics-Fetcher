@@ -33,8 +33,21 @@ sub fetch($$$){
     $agent->get($url);
     my($letter) = get_artist_letter($artist);
     $agent->follow(qr((?-xism:^$letter$)));
-    $agent->follow(qr((?-xism:$artist)));
-    $agent->follow(qr((?-xism:$title)));
+    if(grep { $_->text() =~ /$artist/ }@{$agent->links}) {
+        $agent->follow(qr((?-xism:$artist)));
+        if(grep { $_->text() =~ /$title/ }@{$agent->links}) {
+    	    $agent->follow(qr((?-xism:$title)));
+	}else{
+	        $Lyrics::Fetcher::Error = 'Cannot find such title';
+		return;
+		    
+	}
+    }
+    else{
+	    $Lyrics::Fetcher::Error = 'Cannot find such artist';
+	    return;
+		
+    }
     return $agent->content =~ /<b>$title Lyrics<\/b>.*?\n.*?\n(.*?)<\/font><\/p>/s;
 	      
 }

@@ -54,21 +54,15 @@ our    $url = 'http://www.lyricstime.com';
 	  my($artist_url) = get_artist_list_url($artist);
 	  return if !$artist_url;
 	  my($page) = get  $artist_url;
-	  my(@res) = $page =~ /<a href="\/artist\/([\w\s\-\|\(\)\:\+\?]+?)\/" title="(.*?) lyrics">(.*?)<\/a>/isg;
-	  for(my $i=0;$i<$#res;$i+=2){
+	  my(@res) = $page =~ /<a href="\/artist\/(.*?)\/" title="(.*?) lyrics">(.*?)<\/a>/isg;
+	  for(my $i=0;$i<$#res;$i+=3){
 		  my($aurl, $aname) =  ($res[$i], $res[$i+1]);
-		  return "$url/artist/$aurl/" if lc($artist) eq lc($aname);
-	  }
-	  if($artist =~ /^The /i){
-		  $artist =~ s/^The //i;
-		  $page = get  get_artist_list_url($artist);
-   	          my(@res) = $page =~ /<a href="\/artist\/([\w\s\-\|\(\)\:\+\?]+?)\/" title="(.*?) lyrics">(.*?)<\/a>/isg;
-		  for(my $i=0;$i<$#res;$i+=2){
-			  my($aurl, $aname) =  ($res[$i], $res[$i+1]);
-			  return "$url/artist/$aurl/" if lc($artist) eq lc($aname);
+		  if (lc($artist) eq lc($aname)){
+			  return "$url/artist/$aurl/" ;
 		  }
 	  }
-	  print "get_artist_url : could not find #$artist";
+
+	  $Lyrics::Fetcher::Error = "get_artist_url : could not find #$artist";
 	  return
 
   }
@@ -77,15 +71,20 @@ our    $url = 'http://www.lyricstime.com';
   sub get_song_url{
 	  my($title,$artist) = @_;
 	  my($artist_url) = get_artist_url($artist);
+	  if(!$artist_url && $artist =~ /^The /i){ # try to fix 'the'
+		  $artist =~ s/^The //i;
+	          ($artist_url) = get_artist_url($artist);
+	  }
 	  return if !$artist_url;
 	  my($page) = get $artist_url;
 	  return if !$page;
-	  my(@res) = $page =~ /<a title="(.*?) lyrics" href=\/lyrics\/(\d+).html>(.*?)<\/a><br>/isg;
-	  for(my $i=0;$i<$#res;$i+=3){
-		  my($aname,$aurl) =  ($res[$i], $res[$i+1]);
-		  return "$url/lyrics/$aurl.html" if lc($title) eq lc($aname);
+	  my(@res) = $page =~ /href=\/lyrics\/(\d+).html>(.*?)<\/a><br>/isg;
+	  for(my $i=0;$i<$#res;$i+=2){
+		  my($aurl,$aname) =  ($res[$i], $res[$i+1]);
+		  return "$url/lyrics/$aurl.html" if $aname =~ m/$title/i;
 	  }
-	  print "get_song_url could not find $title"
+	  $Lyrics::Fetcher::Error =  "get_song_url could not find $title";
+	  return;
   }
 
 
