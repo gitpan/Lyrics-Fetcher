@@ -25,12 +25,15 @@ package Lyrics::Fetcher;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# $Id: Fetcher.pm 140 2007-05-27 15:10:41Z davidp $
+# $Id: Fetcher.pm 145 2007-05-29 20:42:42Z davidp $
 
-use vars qw($VERSION $Error @FETCHERS $Fetcher);
+use vars qw($VERSION $Error @FETCHERS $Fetcher $debug);
 
-$VERSION = '0.4.0';
+$VERSION = '0.4.1';
 $Error   = 'OK';      #return status string
+
+$debug = 0; # If you want debug messages, set debug to a true value, and
+            # messages will be output with warn.
 
 use strict;
 
@@ -106,8 +109,11 @@ sub _fetch {
         return;
     }
 
-  fetcher:
+    
+    fetcher:
     for my $fetcher (@$fetchers) {
+    
+        debug("Trying fetcher $fetcher for artist:$artist title:$title");
     
         my $fetcherpkg = __PACKAGE__ . "::$fetcher";
         eval "require $fetcherpkg";
@@ -118,9 +124,11 @@ sub _fetch {
         
         # OK, we require()d this fetcher, try using it:
         $Error = 'OK';
+        debug("Fetcher $fetcher loaded OK, calling ->fetch()");
         my $f = $fetcherpkg->fetch( $artist, $title );
         if ( $Error eq 'OK' ) {
             $Fetcher = $fetcher;
+            debug("Fetcher $fetcher returned lyrics");
             return html2text($f);
         }
         else {
@@ -146,6 +154,15 @@ sub html2text {
     $str =~ s/<.*?>//g;
     $str =~ s/\n\n/\n/g;
     return $str;
+}
+
+
+sub debug {
+
+    my $msg = shift;
+    
+    warn $msg if $debug;
+
 }
 
 1;

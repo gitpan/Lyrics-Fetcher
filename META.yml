@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Lyrics-Fetcher
-version:             0.4.0
+version:             0.4.1
 abstract:            Perl extension to manage fetchers of song lyrics.
 license:             ~
 generated_by:        ExtUtils::MakeMaker version 6.32
