@@ -1,8 +1,13 @@
 MANIFEST
 CHANGES
+README
 Makefile.PL
+META.yml
 lib/Lyrics/Fetcher.pm
-t/1.t
-read_lyrics.pl
-example.pl
-META.yml                                 Module meta-data (added by MakeMaker)
+lib/Lyrics/Fetcher/Cache.pm
+t/1-basic.t
+t/2-pod.t
+t/3-pod-coverage.t
+eg/read_lyrics.pl
+eg/example.pl
+bugreport.pl
