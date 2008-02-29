@@ -29,11 +29,11 @@ use Lyrics::Fetcher::Cache;
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# $Id: Fetcher.pm 241 2008-02-19 00:11:01Z davidp $
+# $Id: Fetcher.pm 270 2008-02-29 10:58:38Z davidp $
 
 use vars qw($VERSION $Error @FETCHERS $Fetcher $debug);
 
-$VERSION = '0.5.0';
+$VERSION = '0.5.1';
 $Error   = 'OK';      #return status string
 
 $debug = 0; # If you want debug messages, set debug to a true value, and
@@ -52,8 +52,10 @@ BEGIN {
             local (*F_DIR);
             opendir( *F_DIR, "$d/$me/" );
             while ( my $b = readdir(*F_DIR) ) {
-                next unless $b =~ /^(.*)\.pm$/;
-                push @FETCHERS, $1;
+		if (my($fetcher) = $b =~ /^(.*)\.pm$/) {
+		    next if $fetcher eq 'Cache';
+		    push @FETCHERS, $fetcher;
+		}
             }
         }
     }
@@ -202,7 +204,13 @@ sub _fetch {
         
         # OK, we require()d this fetcher, try using it:
         $Error = 'OK';
-        _debug("Fetcher $fetcher loaded OK, calling ->fetch()");
+        _debug("Fetcher $fetcher loaded OK");
+	if (!$fetcherpkg->can('fetch')) {
+	    _debug("Fetcher $fetcher can't ->fetch()");
+	    next fetcher;
+	}
+	
+	_debug("Trying to fetch with $fetcher");
         my $f = $fetcherpkg->fetch( $artist, $title );
         if ( $Error eq 'OK' ) {
             $Fetcher = $fetcher;
