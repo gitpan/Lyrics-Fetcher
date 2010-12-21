@@ -1,5 +1,5 @@
 package Lyrics::Fetcher::Cache;
-# $Id: Cache.pm 269 2008-02-29 10:50:57Z davidp $
+# $Id$
 
 use strict;
 use warnings;

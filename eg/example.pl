@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: example.pl 235 2008-02-18 23:43:42Z davidp $
+# $Id$
 #
 # This is just a crude example of how to use Lyrics::Fetcher.
 # David Precious, <davidp@preshweb.co.uk> / http://blog.preshweb.co.uk/

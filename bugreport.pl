@@ -4,7 +4,7 @@
 use strict;
 use ExtUtils::Installed;
 
-# $Id: bugreport.pl 232 2008-02-18 22:53:08Z davidp $
+# $Id$
 # Simple script to give details of Lyrics::Fetcher and fetcher modules
 # installed, to provide useful information when reporting bugs.
 
